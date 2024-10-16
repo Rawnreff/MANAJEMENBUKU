@@ -1,0 +1,75 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+h1 {
+    background-color: #6c5ce7;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+div {
+    margin: 20px auto;
+    width: 80%;
+    max-width: 600px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #6c5ce7;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: #6c5ce7;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #5b4dc7;
+}
+
+#daftarBuku {
+    list-style-type: none;
+    padding: 0;
+}
+
+#daftarBuku li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+#daftarBuku li:last-child {
+    border-bottom: none;
+}
+
+#daftarBuku li.empty {
+    text-align: center;
+    color: #888;
+}

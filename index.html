@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perpustakaan</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Sistem Manajemen Buku Perpustakaan</h1>
+
+    <div>
+        <h2>Tambah Buku</h2>
+        <input type="text" id="judul" placeholder="Judul Buku">
+        <input type="text" id="penulis" placeholder="Penulis">
+        <input type="number" id="tahun" placeholder="Tahun Terbit">
+        <input type="text" id="genre" placeholder="Genre">
+        <button onclick="tambahBuku()">Tambah Buku</button>
+    </div>
+
+    <div>
+        <h2>Edit Buku</h2>
+        <input type="text" id="judulEdit" placeholder="Judul Buku yang Ingin Diedit">
+        <input type="text" id="judulBaru" placeholder="Judul Baru (Opsional)">
+        <input type="text" id="penulisBaru" placeholder="Penulis Baru (Opsional)">
+        <input type="number" id="tahunBaru" placeholder="Tahun Terbit Baru (Opsional)">
+        <input type="text" id="genreBaru" placeholder="Genre Baru (Opsional)">
+        <button onclick="editBuku()">Edit Buku</button>
+    </div>
+
+    <div>
+        <h2>Hapus Buku</h2>
+        <input type="text" id="judulHapus" placeholder="Judul Buku yang Ingin Dihapus">
+        <button onclick="hapusBuku()">Hapus Buku</button>
+    </div>
+
+    <div>
+        <h2>Daftar Buku</h2>
+        <button onclick="tampilkanSemuaBuku()">Tampilkan Semua Buku</button>
+        <ul id="daftarBuku"></ul>
+    </div>
+
+    <script>
+        class Buku {
+            constructor(judul, penulis, tahun, genre) {
+                this.judul = judul;
+                this.penulis = penulis;
+                this.tahun = tahun;
+                this.genre = genre;
+            }
+        }
+    
+        class Perpustakaan {
+            constructor() {
+                this.bukuList = JSON.parse(localStorage.getItem("bukuList")) || [];
+            }
+    
+            simpanData() {
+                localStorage.setItem("bukuList", JSON.stringify(this.bukuList));
+            }
+    
+            tambahBuku(buku) {
+                this.bukuList.push(buku);
+                this.simpanData();
+                alert(`Buku "${buku.judul}" berhasil ditambahkan.`);
+            }
+    
+            editBuku(judul, dataBaru) {
+                const buku = this.bukuList.find(b => b.judul === judul);
+                if (buku) {
+                    buku.judul = dataBaru.judul || buku.judul;
+                    buku.penulis = dataBaru.penulis || buku.penulis;
+                    buku.tahun = dataBaru.tahun || buku.tahun;
+                    buku.genre = dataBaru.genre || buku.genre;
+                    this.simpanData();
+                    alert(`Buku "${judul}" berhasil diperbarui.`);
+                } else {
+                    alert(`Buku "${judul}" tidak ditemukan.`);
+                }
+            }
+    
+            hapusBuku(judul) {
+                const index = this.bukuList.findIndex(b => b.judul === judul);
+                if (index !== -1) {
+                    this.bukuList.splice(index, 1);
+                    this.simpanData();
+                    alert(`Buku "${judul}" berhasil dihapus.`);
+                } else {
+                    alert(`Buku "${judul}" tidak ditemukan.`);
+                }
+            }
+    
+            tampilkanSemuaBuku() {
+                const daftarBukuEl = document.getElementById("daftarBuku");
+                daftarBukuEl.innerHTML = ""; // Kosongkan daftar
+                if (this.bukuList.length > 0) {
+                    this.bukuList.forEach((buku, index) => {
+                        const listItem = document.createElement("li");
+                        listItem.textContent = `${index + 1}. Judul: ${buku.judul}, Penulis: ${buku.penulis}, Tahun: ${buku.tahun}, Genre: ${buku.genre}`;
+                        daftarBukuEl.appendChild(listItem);
+                    });
+                } else {
+                    daftarBukuEl.innerHTML = "<li class='empty'>Tidak ada buku yang tersedia.</li>";
+                }
+            }
+        }
+    
+        const perpustakaan = new Perpustakaan();
+    
+        function tambahBuku() {
+            const judul = document.getElementById("judul").value;
+            const penulis = document.getElementById("penulis").value;
+            const tahun = document.getElementById("tahun").value;
+            const genre = document.getElementById("genre").value;
+    
+            if (judul && penulis && tahun && genre) {
+                const buku = new Buku(judul, penulis, tahun, genre);
+                perpustakaan.tambahBuku(buku);
+                perpustakaan.tampilkanSemuaBuku();
+                document.getElementById("judul").value = "";
+                document.getElementById("penulis").value = "";
+                document.getElementById("tahun").value = "";
+                document.getElementById("genre").value = "";
+            } else {
+                alert("Mohon lengkapi semua field untuk menambah buku.");
+            }
+        }
+    
+        function editBuku() {
+            const judul = document.getElementById("judulEdit").value;
+            const judulBaru = document.getElementById("judulBaru").value;
+            const penulisBaru = document.getElementById("penulisBaru").value;
+            const tahunBaru = document.getElementById("tahunBaru").value;
+            const genreBaru = document.getElementById("genreBaru").value;
+    
+            perpustakaan.editBuku(judul, { judul: judulBaru, penulis: penulisBaru, tahun: tahunBaru, genre: genreBaru });
+            perpustakaan.tampilkanSemuaBuku();
+            document.getElementById("judulEdit").value = "";
+            document.getElementById("judulBaru").value = "";
+            document.getElementById("penulisBaru").value = "";
+            document.getElementById("tahunBaru").value = "";
+            document.getElementById("genreBaru").value = "";
+        }
+    
+        function hapusBuku() {
+            const judul = document.getElementById("judulHapus").value;
+            perpustakaan.hapusBuku(judul);
+            perpustakaan.tampilkanSemuaBuku();
+            document.getElementById("judulHapus").value = "";
+        }
+    
+        function tampilkanSemuaBuku() {
+            perpustakaan.tampilkanSemuaBuku();
+        }
+    
+        window.onload = tampilkanSemuaBuku;
+    </script>
+    
+</body>
+</html>
